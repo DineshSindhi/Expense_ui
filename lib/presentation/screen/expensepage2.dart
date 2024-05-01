@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class HomePage3 extends StatelessWidget {
+class ExpensePage2 extends StatelessWidget {
   List<Map<String,dynamic>> mList=[
     {
       'color':Colors.blue.shade300,

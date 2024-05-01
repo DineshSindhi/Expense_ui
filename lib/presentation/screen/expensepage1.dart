@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class HomePage2 extends StatelessWidget {
-  const HomePage2({super.key});
+class ExpensePage1 extends StatelessWidget {
+
 
   @override
   Widget build(BuildContext context) {

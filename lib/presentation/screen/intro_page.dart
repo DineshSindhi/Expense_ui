@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ui/home.dart';
+import 'package:ui/presentation/screen/home.dart';
 
-class StartPage extends StatelessWidget {
-  const StartPage({super.key});
-
+class IntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +17,7 @@ class StartPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        splashColor: Colors.white,
+
         foregroundColor: Colors.white,
         backgroundColor: Colors.pinkAccent,
         onPressed: (){

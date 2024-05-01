@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'home2.dart';
-import 'home3.dart';
+import 'expensepage1.dart';
+import 'expensepage2.dart';
 class HomePage extends StatefulWidget {
 
   @override
@@ -10,8 +10,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Widget>PageList=[
-    HomePage2(),
-    HomePage3(),
+    ExpensePage1(),
+    ExpensePage2(),
     Center(child: Text('Hi'),),
     Center(child: Text('Hi'),),
     Center(child: Text('Hi'),),

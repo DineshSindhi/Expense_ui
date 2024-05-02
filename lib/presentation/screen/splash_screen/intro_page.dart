@@ -2,9 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ui/presentation/screen/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ui/presentation/screen/home/home.dart';
+import 'package:ui/presentation/screen/on_board/login_page.dart';
+import 'package:ui/presentation/screen/on_board/sign_up_page.dart';
 
-class IntroPage extends StatelessWidget {
+class IntroPage extends StatefulWidget {
+  static const String KEY='login';
+
+  @override
+  State<IntroPage> createState() => _IntroPageState();
+}
+
+class _IntroPageState extends State<IntroPage> {
+  @override
+  void initState() {
+    super.initState();
+    checkLog();
+    checkout();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +37,7 @@ class IntroPage extends StatelessWidget {
         foregroundColor: Colors.white,
         backgroundColor: Colors.pinkAccent,
         onPressed: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
         },
         child: Icon(Icons.arrow_right_alt_sharp,size: 38,),
       ),
@@ -53,4 +69,29 @@ class IntroPage extends StatelessWidget {
 
     );
   }
-}
+
+  void checkLog()async{
+      var pref=await SharedPreferences.getInstance();
+      var login=pref.getBool(IntroPage.KEY);
+      if(login!=null){
+        if(login){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
+        }else{
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+        }
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+      }
+    }
+
+  void checkout() async {
+    var pref=await SharedPreferences.getInstance();
+    var logout=await pref.setBool(SignPage.OUTKEY, true);
+    if(logout){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+    }
+    }
+  }
+

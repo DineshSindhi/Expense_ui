@@ -23,7 +23,7 @@ class ExpensePage1 extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 9,right: 9),
+        padding: const EdgeInsets.only(left: 9,right: 9,top: 5),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,

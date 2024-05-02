@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ui/presentation/screen/on_board/login_page.dart';
 
 import 'expensepage1.dart';
 import 'expensepage2.dart';
+import 'expensepage4.dart';
 class HomePage extends StatefulWidget {
 
   @override
@@ -13,8 +15,8 @@ class _HomePageState extends State<HomePage> {
     ExpensePage1(),
     ExpensePage2(),
     Center(child: Text('Hi'),),
-    Center(child: Text('Hi'),),
-    Center(child: Text('Hi'),),
+   ExpensePage4(),
+
   ];
   int selected=0;
 

@@ -20,20 +20,18 @@ class LoginPage extends StatelessWidget {
          children: [
            Text('Welcome to Expense',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w400)),
            mySizeBox(),
-         myTextFiled(controllerName: emailController, label: 'Email',hint: 'Enter your Email'),
+         myTextFiled(controllerName: emailController, label: 'Email',hint: 'Enter your Email',suffixText: '@gmail.com'),
            mySizeBox(),
-         myTextFiled(controllerName: passController, label: 'Password',hint: 'Enter your Password'),
+         myTextFiled(controllerName: passController, label: 'Password',hint: 'Enter your Password',),
            mySizeBox(),
          ElevatedButton(onPressed: () async {
            var db=MyDataHelper.db;
-           var check=await db.login(emailController.text.toString(), passController.text.toString());
+           var check=await db.login(email: '${emailController.text.toString()}@gmail.com',pass:passController.text.toString());
            if(check){
              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
            }else{
-             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invaid Data')));
+             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invaid Username or Password')));
            }
-           var pref= await SharedPreferences.getInstance();
-           pref.setBool(IntroPage.KEY, true);
 
          }, child: Text('Login',style: TextStyle(fontSize: 20))),
            mySizeBox(),

@@ -1,13 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
-class ExpensePage1 extends StatelessWidget {
+import 'bloc_for_cat/bloc_database.dart';
+import 'bloc_for_cat/events.dart';
+import 'bloc_for_cat/states.dart';
 
+class ExpensePage1 extends StatefulWidget {
+  @override
+  State<ExpensePage1> createState() => _ExpensePage1State();
+}
+
+class _ExpensePage1State extends State<ExpensePage1> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CatBloc>().add(GetExpense());
+  }
+  var Df=DateFormat.yMd();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Row(
           children: [
@@ -23,7 +39,7 @@ class ExpensePage1 extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 9,right: 9,top: 5),
+        padding: const EdgeInsets.only(left: 9,right: 9),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +83,7 @@ class ExpensePage1 extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(top: 9,bottom: 9),
                   height: 220,
-                  width: 450,
+                  width: double.infinity,
                   decoration: BoxDecoration(color: Colors.purple,
                   borderRadius: BorderRadius.circular(15)),
                   child: Padding(
@@ -103,8 +119,8 @@ class ExpensePage1 extends StatelessWidget {
             Text('Expense List',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
         Container(
           margin: EdgeInsets.only(top: 9,bottom: 9),
-          height: 230,
-          width: 450,
+          height: 470,
+          width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey,width: 2),
               borderRadius: BorderRadius.circular(15)),
@@ -120,85 +136,113 @@ class ExpensePage1 extends StatelessWidget {
                 padding: const EdgeInsets.only(top:5,bottom: 5),
                 child: Container(
                   color: Colors.grey,
-                  width: 450,
+                  width: double.infinity,
                   height: 3,
                 ),
               ),
-              ListTile(
-                leading: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade200,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Icon(Icons.shopping_bag_outlined),
-                ),
-                title: Text('Shop',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-                subtitle: Text('Buy new clothes',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-                trailing: Text('  -\$939',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
+              BlocBuilder<CatBloc,CatState>(
+                builder: (context, state) {
+                  if(state is LoadingState){
+                    return Center(child:CircularProgressIndicator());
+                  }else if (state is ErrorState){
+                    return Text('${state.msg}');
+                  }else if (state is LoadedState){
+                    var mData =state.allExpense;
+                    return mData.isNotEmpty? Expanded(
+                      child: ListView.builder(
+                          itemCount: mData.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(mData[index].title),
+                              subtitle: Text(mData[index].desc),
+                              trailing: Column(
+                                children: [
+                                  Text(mData[index].amount,style: TextStyle(fontSize: 15),),
+                                  Text(Df.format(DateTime.fromMillisecondsSinceEpoch(int.parse(mData[index].time))),style: TextStyle(fontSize: 15)),
+                                ],
+                              ),
+                            );
+                          }),
+                    ):Center(child: Text('No Expense!!'),);
+                  }
+                  return Container();
+                },
               ),
-              ListTile(
-                leading: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow.shade100,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Icon(Icons.mobile_friendly),
-                ),
-                title: Text('Electronics',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-                subtitle: Text('Buy new ipone',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-                trailing: Text('  -\$1004',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-              ),
+              // ListTile(
+              //   leading: Container(
+              //     width: 60,
+              //     height: 60,
+              //     decoration: BoxDecoration(
+              //       color: Colors.blue.shade200,
+              //       borderRadius: BorderRadius.circular(5),
+              //     ),
+              //     child: Icon(Icons.shopping_bag_outlined),
+              //   ),
+              //   title: Text('Shop',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+              //   subtitle: Text('Buy new clothes',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
+              //   trailing: Text('  -\$939',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
+              // ),
+              // ListTile(
+              //   leading: Container(
+              //     width: 60,
+              //     height: 60,
+              //     decoration: BoxDecoration(
+              //       color: Colors.yellow.shade100,
+              //       borderRadius: BorderRadius.circular(5),
+              //     ),
+              //     child: Icon(Icons.mobile_friendly),
+              //   ),
+              //   title: Text('Electronics',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+              //   subtitle: Text('Buy new ipone',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
+              //   trailing: Text('  -\$1004',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
+              // ),
 
 
             ],
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 9,bottom: 9),
-          height: 170,
-          width: 450,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey,width: 2),
-              borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Friday, 3',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
-                  Text('-\$674',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
-                ],),
-              Padding(
-                padding: const EdgeInsets.only(top: 5,bottom: 5),
-                child: Container(
-                  color: Colors.grey,
-                  width: 450,
-                  height: 3,
-                ),
-              ),
-              ListTile(
-               leading: Container(
-                 width: 60,
-                 height: 60,
-                 decoration: BoxDecoration(
-                   color: Colors.red.shade300,
-                   borderRadius: BorderRadius.circular(5),
-                 ),
-                 child: Icon(Icons.card_membership),
-               ),
-                title: Text('Transportation',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-                subtitle: Text('Trip to Dubai',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-                trailing: Text('  -\$674',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-              )
-            ],
-            ),
-          ),
-        ),
+        // Container(
+        //   margin: EdgeInsets.only(top: 9,bottom: 9),
+        //   height: 170,
+        //   width: double.infinity,
+        //   decoration: BoxDecoration(
+        //     border: Border.all(color: Colors.grey,width: 2),
+        //       borderRadius: BorderRadius.circular(15)),
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(15),
+        //     child: Column(children: [
+        //       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           Text('Friday, 3',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
+        //           Text('-\$674',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
+        //         ],),
+        //       Padding(
+        //         padding: const EdgeInsets.only(top: 5,bottom: 5),
+        //         child: Container(
+        //           color: Colors.grey,
+        //           width: double.infinity,
+        //           height: 3,
+        //         ),
+        //       ),
+        //       ListTile(
+        //        leading: Container(
+        //          width: 60,
+        //          height: 60,
+        //          decoration: BoxDecoration(
+        //            color: Colors.red.shade300,
+        //            borderRadius: BorderRadius.circular(5),
+        //          ),
+        //          child: Icon(Icons.card_membership),
+        //        ),
+        //         title: Text('Transportation',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+        //         subtitle: Text('Trip to Dubai',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
+        //         trailing: Text('  -\$674',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
+        //       )
+        //     ],
+        //     ),
+        //   ),
+        // ),
           ],
         ),
       ),

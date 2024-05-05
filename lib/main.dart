@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ui/presentation/screen/on_board/login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ui/data/repository/local/local_database.dart';
+import 'package:ui/presentation/screen/home/bloc_for_cat/bloc_database.dart';
+import 'package:ui/presentation/screen/home/expensepage1.dart';
 import 'package:ui/presentation/screen/splash_screen/intro_page.dart';
 void main() {
-  runApp(const MyApp());
+  runApp(BlocProvider(create: (context) => CatBloc(db: MyDataHelper.db),
+  child: const MyApp(),));
 }
 
 class MyApp extends StatelessWidget {

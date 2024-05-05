@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class ExpensePage2 extends StatelessWidget {
@@ -52,173 +53,175 @@ class ExpensePage2 extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 10.0,right: 8,),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          Container(
-            margin: EdgeInsets.only(top: 9,bottom: 9),
-            height: 150,
-            width: 450,
-            decoration: BoxDecoration(color: Colors.purple,
-                borderRadius: BorderRadius.circular(15)),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20,left: 8,right: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(' Total expense',style: TextStyle(fontSize: 25,color: Colors.white),),
-                      Container(
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade400,
-                          shape: BoxShape.circle
+        child:Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            Container(
+              margin: EdgeInsets.only(top: 9,bottom: 9),
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(color: Colors.purple,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20,left: 8,right: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(' Total expense',style: TextStyle(fontSize: 25,color: Colors.white),),
+                        Container(
+                          height: 25,
+                          width: 25,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade400,
+                            shape: BoxShape.circle
+                          ),
+                            child: Icon(Icons.more_horiz,color: Colors.white,))
+                      ],
+                    ),
+                    Text('  \$4,528 / \$67798 per month',style: TextStyle(fontSize: 25,color: Colors.white),),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child:  Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 5,
+                            decoration: BoxDecoration(color: Colors.yellow,
+                                borderRadius: BorderRadius.circular(5)),
+                          ),
                         ),
-                          child: Icon(Icons.more_horiz,color: Colors.white,))
-                    ],
-                  ),
-                  Text('  \$4,528 / \$67798 per month',style: TextStyle(fontSize: 25,color: Colors.white),),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
-                    width: 410,
-                    height: 5,
-                    decoration: BoxDecoration(color: Colors.yellow,
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                )
-                ],
+                      ],
+                    ),
+                  )
+                  ],
 
+                ),
               ),
             ),
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text('  Expense BreakSdown',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Text('Limit \$900/week',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(5)
-                ),
-                height: 35,
-                width: 130,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
                   children: [
-                    Text('Week',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                    Icon(Icons.arrow_drop_down_outlined)
+                    Text('  Expense BreakSdown',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
+                    Text('Limit \$900/week',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
                   ],
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 10,),
-          Image.asset('assets/image/cart.png',),
-          Text('Spending Detail',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  height: 35,
+                  width: 130,
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Week',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                      Icon(Icons.arrow_drop_down_outlined)
+                    ],
+                  ),
+                )
+              ],
+            ),
             SizedBox(height: 10,),
-            Text('Your expenses are divided into 6 categories',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
-            SizedBox(height: 10,),
-            Row(children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Container(
-                    height: 18,
-                    width: 120,
-                    color: Colors.blue,
-                  ),
-                  Text('40%',style: TextStyle(fontSize: 17),)
+                  Image.asset('assets/image/cart.png',),
                 ],
               ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 18,
-                    width: 80,
-                    color: Colors.yellow,
+            Text('Spending Detail',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+              SizedBox(height: 10,),
+              Text('Your expenses are divided into 6 categories',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
+              SizedBox(height: 10,),
+              Row(children: [
+                Expanded(
+                  flex: 6,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 18,
+                        color: Colors.blue,
+                      ),
+                      Text('40%',style: TextStyle(fontSize: 17),)
+                    ],
                   ),
-                  Text('30%',style: TextStyle(fontSize: 17),)
-                ],
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 18,
-                    width: 70,
-                    color: Colors.red,
+                ),
+                Expanded(flex: 5,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 18,
+                        color: Colors.yellow,
+                      ),
+                      Text('30%',style: TextStyle(fontSize: 17),)
+                    ],
                   ),
-                  Text('20%',style: TextStyle(fontSize: 17),)
-                ],
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 18,
-                    width: 60,
-                    color: Colors.green,
+                ),
+                Expanded(flex: 4,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 18,
+                        color: Colors.red,
+                      ),
+                      Text('20%',style: TextStyle(fontSize: 17),)
+                    ],
                   ),
-                  Text('15%',style: TextStyle(fontSize: 17),)
-                ],
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 18,
-                    width: 50,
-                    color: Colors.pinkAccent,
+                ),
+                Expanded(flex: 3,                child: Column(crossAxisAlignment: CrossAxisAlignment.start,                  children: [
+                      Container(
+                        height: 18,
+                        color: Colors.green,
+                      ),
+                      Text('15%',style: TextStyle(fontSize: 17),)
+                    ],
                   ),
-                  Text('10%',style: TextStyle(fontSize: 17),)
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 18,
-                    width: 40,
-                    color: Colors.purple,
+                ),
+                Expanded(flex: 2,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 18,
+                        color: Colors.pinkAccent,
+                      ),
+                      Text('10%',style: TextStyle(fontSize: 17),)
+                    ],
                   ),
-                  Text('5%',style: TextStyle(fontSize: 17),)
-                ],
-              ),
+                ),
 
 
-            ],),
-            SizedBox(height: 10,),
-            Expanded(child: GridView.builder(
-              itemCount: mList.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 90,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10
-            ), itemBuilder: (context, index) {
-              return Container(
-                height: 80,
-                width: 180,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey,width: 2),
-                    borderRadius: BorderRadius.circular(10)),
-                child:  ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: mList[index]['color'],
-                      borderRadius: BorderRadius.circular(5),
+              ],),
+              SizedBox(height: 10,),
+              Expanded(child: GridView.builder(
+                itemCount: mList.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: 90,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10
+              ), itemBuilder: (context, index) {
+                return Container(
+                  height: 80,
+                  width: 180,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey,width: 2),
+                      borderRadius: BorderRadius.circular(10)),
+                  child:  ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: mList[index]['color'],
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child:  (mList[index]['icon']),
                     ),
-                    child:  (mList[index]['icon']),
-                  ),
-                  title: Text(mList[index]['name'],style: TextStyle(fontSize: 19,fontWeight: FontWeight.w500),),
-                  subtitle: Text(mList[index]['price'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color:Colors.pinkAccent),),),
-              );
-            },)),
-        ],),
-      ),
+                    title: Text(mList[index]['name'],style: TextStyle(fontSize: 19,fontWeight: FontWeight.w500),),
+                    subtitle: Text(mList[index]['price'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color:Colors.pinkAccent),),),
+                );
+              },)),
+          ],),
+        ),
     );
   }
 }

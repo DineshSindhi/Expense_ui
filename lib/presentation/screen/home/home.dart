@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ui/presentation/screen/home/cat_page.dart';
 import 'package:ui/presentation/screen/on_board/login_page.dart';
 
 import 'expensepage1.dart';
 import 'expensepage2.dart';
+import 'expensepage3.dart';
 import 'expensepage4.dart';
 class HomePage extends StatefulWidget {
 
@@ -14,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget>PageList=[
     ExpensePage1(),
     ExpensePage2(),
-    Center(child: Text('Hi'),),
+    Text('Hi'), // ExpensePage3(),
    ExpensePage4(),
 
   ];
@@ -52,7 +54,9 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pinkAccent,
         foregroundColor: Colors.white,
-        onPressed: (){},
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CatPage(),));
+        },
         child: Icon(Icons.add),
       ),
     );

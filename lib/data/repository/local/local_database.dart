@@ -48,9 +48,8 @@ class MyDataHelper{
     var mainPath=join(root.path,'ExpenseDb');
     return await openDatabase(mainPath,version: 1,onCreate: (db,version){
       db.execute(' create table $TABLE_NAME_USER ( $TABLE_COLUMN_UID integer primary key autoincrement , $TABLE_COLUMN_UEMAIL text unique, $TABLE_COLUMN_UPASS text, $TABLE_COLUMN_UMOBILE text,$TABLE_COLUMN_NAME text )');
-      db.execute('create table $TABLE_NAME_EXPENSE ( $TABLE_COLUMN_EXPID integer primary key autoincrement ,$TABLE_COLUMN_UID integer , $TABLE_COLUMN_ETITLE text,$TABLE_COLUMN_EDESC text,$TABLE_COLUMN_ETIME text,$TABLE_COLUMN_EAMOUNT text )');
-     /// db.execute(' create table $TABLE_NAME_CAT ( $TABLE_COLUMN_CATID integer primary key autoincrement,$TABLE_COLUMN_CATNAME text, )');
-      /// $TABLE_COLUMN_EBALANCE text,$TABLE_COLUMN_EAMOUNT text,$TABLE_COLUMN_ETYPE text
+      db.execute('create table $TABLE_NAME_EXPENSE ( $TABLE_COLUMN_EXPID integer primary key autoincrement ,$TABLE_COLUMN_UID integer , $TABLE_COLUMN_CATID integer, $TABLE_COLUMN_ETITLE text,$TABLE_COLUMN_EDESC text,$TABLE_COLUMN_ETIME text, $TABLE_COLUMN_EBALANCE text,$TABLE_COLUMN_EAMOUNT text,$TABLE_COLUMN_ETYPE text )');
+
     });
   }
   ///[Query for User],

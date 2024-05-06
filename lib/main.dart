@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui/data/repository/local/local_database.dart';
 import 'package:ui/presentation/screen/home/bloc_for_cat/bloc_database.dart';
+import 'package:ui/presentation/screen/home/cat_page.dart';
 import 'package:ui/presentation/screen/home/expensepage1.dart';
 import 'package:ui/presentation/screen/splash_screen/intro_page.dart';
 void main() {

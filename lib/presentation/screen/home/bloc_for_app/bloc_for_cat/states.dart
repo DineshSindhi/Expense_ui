@@ -1,4 +1,4 @@
-import '../../../../data/model/expense-model.dart';
+import '../../../../../data/model/expense-model.dart';
 
 abstract class CatState{}
 class IntiGretState extends CatState{}

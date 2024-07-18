@@ -4,10 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:ui/domain/cat_list.dart';
 import 'package:ui/domain/myapp_bts.dart';
 import 'package:ui/domain/ui_helper.dart';
-import 'package:ui/presentation/screen/home/bloc_for_cat/bloc_database.dart';
-import 'package:ui/presentation/screen/home/bloc_for_cat/events.dart';
+
 
 import '../../../data/model/expense-model.dart';
+import 'bloc_for_app/bloc_for_cat/bloc_database.dart';
+import 'bloc_for_app/bloc_for_cat/events.dart';
 
 class CatPage extends StatefulWidget {
   @override
@@ -23,8 +24,6 @@ class _CatPageState extends State<CatPage> {
   var transactionType='Debit';
   var expenseTime=DateTime.now();
   String Error='';
-  String rror='';
-
   Future<void> _selectedDate() async {
    final DateTime? selectedDate= await showDatePicker(
        context: context,
@@ -104,7 +103,7 @@ class _CatPageState extends State<CatPage> {
                   title: titleController.text.toString(),
                   desc: descController.text.toString(),
                   time: expenseTime.millisecondsSinceEpoch.toString(),
-                  amount: '\u{20B9} ${amountController.text.toString()}',
+                  amount: amountController.text.toString(),
                   cid: AppCatData.mCategory[catIndex].catId,
                   balance: balance.toString(),
                   type: transactionType,
@@ -112,13 +111,13 @@ class _CatPageState extends State<CatPage> {
                 Navigator.pop(context);
               }
               else{
-               // Error=' Please Enter Required Details';
+                Error=' Please Enter Required Details';
               }
               setState(() {
 
               });
             }),
-           // Text('$Error',style: TextStyle(fontSize: 20),),
+            Text('$Error',style: TextStyle(fontSize: 20),),
 
         ],
         ),

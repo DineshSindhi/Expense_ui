@@ -131,7 +131,7 @@ class ExpensePage2 extends StatelessWidget {
               ),
             Text('Spending Detail',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
               SizedBox(height: 10,),
-              Text('Your expenses are divided into 6 categories',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
+              Text('Your expenses are divided into 5 categories',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
               SizedBox(height: 10,),
               Row(children: [
                 Expanded(

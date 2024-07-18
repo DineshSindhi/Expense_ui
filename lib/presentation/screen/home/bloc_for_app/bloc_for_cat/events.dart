@@ -1,4 +1,5 @@
-import '../../../../data/model/expense-model.dart';
+
+import '../../../../../data/model/expense-model.dart';
 
 abstract class CatEvent{}
 class AddExpense extends CatEvent{

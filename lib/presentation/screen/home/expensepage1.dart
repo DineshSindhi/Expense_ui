@@ -1,13 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:ui/data/model/expense-model.dart';
+import 'package:ui/data/model/filtered_time_model.dart';
 import 'package:ui/domain/cat_list.dart';
+import '../../../data/model/filtered_cat.dart';
+import '../../../domain/dates.dart';
+import 'bloc_for_app/bloc_for_cat/bloc_database.dart';
+import 'bloc_for_app/bloc_for_cat/events.dart';
+import 'bloc_for_app/bloc_for_cat/states.dart';
 
-import 'bloc_for_cat/bloc_database.dart';
-import 'bloc_for_cat/events.dart';
-import 'bloc_for_cat/states.dart';
 
 class ExpensePage1 extends StatefulWidget {
   @override
@@ -15,15 +18,24 @@ class ExpensePage1 extends StatefulWidget {
 }
 
 class _ExpensePage1State extends State<ExpensePage1> {
+
+
   @override
   void initState() {
     super.initState();
     context.read<CatBloc>().add(GetExpense());
   }
-  var Df=DateFormat.yMd();
-
+  int sIndex=0;
+  bool catWise=false;
+  var dateAll=DateFormat.yMMMMd();
+  var dateY=DateFormat.y();
+  var dateM=DateFormat.LLLL();
+  var typeDate='Date Wise';
+  List<FilteredTimeModel> dateExpense=[];
+  List<ExpenseModel> listExpense=[];
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Row(
@@ -55,9 +67,11 @@ class _ExpensePage1State extends State<ExpensePage1> {
                       ),
                     ),
                     Column(
+
                       children: [
                         Text(' Morning',style: TextStyle(fontSize: 16,color: Colors.grey.shade500),),
                         Text(' Jack',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+
                       ],
                     ),
                   ],
@@ -65,16 +79,38 @@ class _ExpensePage1State extends State<ExpensePage1> {
 
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade400,
                       borderRadius: BorderRadius.circular(5)
                   ),
                   height: 35,
-                  width: 130,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('This Month',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
-                      Icon(Icons.arrow_drop_down_outlined)
-                    ],
+                  child: Center(
+                    child: DropdownButton(
+
+                      dropdownColor: Colors.grey.shade400,
+
+                      value: typeDate,
+                      onChanged: (newValue) {
+                        if(newValue=='This Month'){catWise=false;
+                          filteredDate(allNExpense: listExpense, dName: dateM, listName: dateExpense);
+                        }else if(newValue=='This Year'){catWise=false;
+                          filteredDate(allNExpense: listExpense, dName: dateY, listName: dateExpense);
+                        }else if(newValue=='Date Wise'){
+                          catWise=false;
+                          filteredDate(allNExpense: listExpense,dName: dateAll, listName: dateExpense);
+                        }else if(newValue=='Category Wise'){
+                          catWise=true;
+                          filteredCatExpense(allNExpense: listExpense);
+                        }
+                        setState(() {
+                         typeDate=newValue!;
+                        });
+                      },
+                      items: ['Date Wise','This Year','This Month','Category Wise'].map((e) {
+                        return DropdownMenuItem(
+                        value: e,
+                            child: Text(e,style: TextStyle(color: Colors.black)));
+                      }).toList(),
+                    ),
                   ),
                 )
               ],
@@ -118,177 +154,183 @@ class _ExpensePage1State extends State<ExpensePage1> {
               ],
             ),
             Text('Expense List',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-            BlocBuilder<CatBloc,CatState>(
-              builder: (context, state) {
-                if(state is LoadingState){
-                  return Center(child:CircularProgressIndicator());
-                }else if (state is ErrorState){
-                  return Text('${state.msg}');
-                }else if (state is LoadedState){
-                  var mData =state.allExpense;
-                  return mData.isNotEmpty? Expanded(
-                    child: ListView.builder(
-                        itemCount: mData.length,
-                        itemBuilder: (context, index) {
-                          var filteredList=AppCatData.mCategory.where((element) => element.catId==mData[index].cid).toList();
-                          String img=filteredList[0].catImage;
-                          return ListTile(
-                            leading: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade200,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(img),
-                              ),
-                            ),
-                            title: Text(mData[index].title,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700)),
-                            subtitle: Text(mData[index].desc,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
-                            trailing: Column(
-                              children: [
-                                Text('-${mData[index].amount}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-                                //Text(Df.format(DateTime.fromMillisecondsSinceEpoch(int.parse(mData[index].time))),style: TextStyle(fontSize: 15)),
-                              ],
-                            ),
-                          );
-                        }),
-                  ):Center(child: Text('No Expense!!'),);
-                }
-                return Container();
-              },
-            ),
-        // Container(
-        //   margin: EdgeInsets.only(top: 9,bottom: 9),
-        //   height: 470,
-        //   width: double.infinity,
-        //   decoration: BoxDecoration(
-        //     border: Border.all(color: Colors.grey,width: 2),
-        //       borderRadius: BorderRadius.circular(15)),
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(15),
-        //     child: Column(children: [
-        //       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //         Text('Monday, 14',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700),),
-        //         Text('-\$1947',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700),),
-        //       ],),
-        //       Padding(
-        //         padding: const EdgeInsets.only(top:5,bottom: 5),
-        //         child: Container(
-        //           color: Colors.grey,
-        //           width: double.infinity,
-        //           height: 3,
-        //         ),
-        //       ),
-        //       BlocBuilder<CatBloc,CatState>(
-        //         builder: (context, state) {
-        //           if(state is LoadingState){
-        //             return Center(child:CircularProgressIndicator());
-        //           }else if (state is ErrorState){
-        //             return Text('${state.msg}');
-        //           }else if (state is LoadedState){
-        //             var mData =state.allExpense;
-        //             return mData.isNotEmpty? Expanded(
-        //               child: ListView.builder(
-        //                   itemCount: mData.length,
-        //                   itemBuilder: (context, index) {
-        //                     return ListTile(
-        //                       title: Text(mData[index].title),
-        //                       subtitle: Text(mData[index].desc),
-        //                       trailing: Column(
-        //                         children: [
-        //                           Text(mData[index].amount,style: TextStyle(fontSize: 15),),
-        //                           Text(Df.format(DateTime.fromMillisecondsSinceEpoch(int.parse(mData[index].time))),style: TextStyle(fontSize: 15)),
-        //                         ],
-        //                       ),
-        //                     );
-        //                   }),
-        //             ):Center(child: Text('No Expense!!'),);
-        //           }
-        //           return Container();
-        //         },
-        //       ),
-              // ListTile(
-              //   leading: Container(
-              //     width: 60,
-              //     height: 60,
-              //     decoration: BoxDecoration(
-              //       color: Colors.blue.shade200,
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //     child: Icon(Icons.shopping_bag_outlined),
-              //   ),
-              //   title: Text('Shop',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-              //   subtitle: Text('Buy new clothes',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-              //   trailing: Text('  -\$939',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-              // ),
-              // ListTile(
-              //   leading: Container(
-              //     width: 60,
-              //     height: 60,
-              //     decoration: BoxDecoration(
-              //       color: Colors.yellow.shade100,
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //     child: Icon(Icons.mobile_friendly),
-              //   ),
-              //   title: Text('Electronics',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-              //   subtitle: Text('Buy new ipone',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-              //   trailing: Text('  -\$1004',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-              // ),
+            Expanded(
+              child: BlocBuilder<CatBloc,CatState>(
+                builder: (context, state) {
+                  if(state is LoadingState){
+                    return Center(child:CircularProgressIndicator());
+                  }else if (state is ErrorState){
+                    return Text('${state.msg}');
+                  }else if (state is LoadedState){
+                    listExpense=state.allExpense;
+                  //filteredDate(allNExpense: state.allExpense,dName: dateAll, listName: dateExpense);
+                   // FilteredExpense(allNExpense:state.allExpense);
+                    return ListView.builder(
+                      itemCount: dateExpense.length,
+                      itemBuilder: (context, pIndex) {
+                        var filteredList=AppCatData.mCategory.where((element) => element.catId==dateExpense[pIndex].allFExpense[sIndex].cid).toList();
+                        String img=filteredList[0].catImage;
+                        String imgTitle=filteredList[0].catTitle;
+                        return  Container(
+                          margin: EdgeInsets.only(top: 9,bottom: 9),
 
-        //
-        //     ],
-        //     ),
-        //   ),
-        // ),
-        // Container(
-        //   margin: EdgeInsets.only(top: 9,bottom: 9),
-        //   height: 170,
-        //   width: double.infinity,
-        //   decoration: BoxDecoration(
-        //     border: Border.all(color: Colors.grey,width: 2),
-        //       borderRadius: BorderRadius.circular(15)),
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(15),
-        //     child: Column(children: [
-        //       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Text('Friday, 3',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
-        //           Text('-\$674',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700,),),
-        //         ],),
-        //       Padding(
-        //         padding: const EdgeInsets.only(top: 5,bottom: 5),
-        //         child: Container(
-        //           color: Colors.grey,
-        //           width: double.infinity,
-        //           height: 3,
-        //         ),
-        //       ),
-        //       ListTile(
-        //        leading: Container(
-        //          width: 60,
-        //          height: 60,
-        //          decoration: BoxDecoration(
-        //            color: Colors.red.shade300,
-        //            borderRadius: BorderRadius.circular(5),
-        //          ),
-        //          child: Icon(Icons.card_membership),
-        //        ),
-        //         title: Text('Transportation',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-        //         subtitle: Text('Trip to Dubai',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey),),
-        //         trailing: Text('  -\$674',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
-        //       )
-        //     ],
-        //     ),
-        //   ),
-        // ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey,width: 2),
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(children: [
+                              catWise==true?
+                              ListTile(
+                                leading: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade200,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(img),
+                                  ),
+                                 ),
+                                title: Text(imgTitle,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w500)),
+                                trailing: Text('\u{20B9}${dateExpense[pIndex].totalAmount}',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700),),
+                              ):Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('${dateExpense[pIndex].title}',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700),),
+                                  Text('\u{20B9}${dateExpense[pIndex].totalAmount}',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700),),
+
+                                ],),
+                              Padding(
+                                padding: const EdgeInsets.only(top:5,bottom: 5),
+                                child: Container(
+                                  color: Colors.grey,
+                                  width: double.infinity,
+                                  height: 3,
+                                ),
+                              ),
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: dateExpense[pIndex].allFExpense.length,
+                                itemBuilder: (context, index) {
+
+                                  var filteredList=AppCatData.mCategory.where((element) => element.catId==dateExpense[pIndex].allFExpense[index].cid).toList();
+                                  String img=filteredList[0].catImage;
+                                  return ListTile(
+                                    leading: Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.shade200,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(img),
+                                      ),
+                                    ),
+                                    title: Text(dateExpense[pIndex].allFExpense[index].title,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700)),
+                                    subtitle: Text(dateExpense[pIndex].allFExpense[index].desc,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: Colors.grey)),
+                                    trailing: Column(
+                                      children: [
+                                        Text('-\u{20B9}${dateExpense[pIndex].allFExpense[index].amount}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.pinkAccent),),
+                                        catWise==false? SizedBox(height: 1,width: 1,):Text(dateAll.format(DateTime.fromMillisecondsSinceEpoch(int.parse(dateExpense[pIndex].allFExpense[index].time))),style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
+
+                                      ],
+                                    ),
+                                  );
+                                })
+
+                            ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            )
+
+
           ],
         ),
       ),
     );
+
+  }
+  // void FilteredExpense({required List<ExpenseModel> allNExpense}){
+  //   dateExpense.clear();
+  //   List<String>uniqueDates=[];
+  //   for(ExpenseModel eachExpense in allNExpense){
+  //     var createTime=eachExpense.time;
+  //     var time =DateTime.fromMillisecondsSinceEpoch(int.parse(createTime));
+  //     var expenseTime=dateM.format(time);
+  //     print(expenseTime);
+  //     if(!uniqueDates.contains(expenseTime)){
+  //       uniqueDates.add(expenseTime);
+  //       print(uniqueDates);
+  //     }
+  //   }
+  //   for(String eachTime in uniqueDates){
+  //     num totalAmt= 0.0;
+  //     List<ExpenseModel> mData=[];
+  //
+  //     for(ExpenseModel eachExpense in allNExpense){
+  //       var createTime=eachExpense.time;
+  //       var time =DateTime.fromMillisecondsSinceEpoch(int.parse(createTime));
+  //       var expenseTime=dateM.format(time);
+  //       if(expenseTime==eachTime){
+  //        mData.add(eachExpense);
+  //        if(eachExpense.type=='Debit'){
+  //        totalAmt -= int.parse(eachExpense.amount);
+  //        }else{
+  //          totalAmt += int.parse(eachExpense.amount);
+  //        }
+  //       }
+  //     }
+  //     dateExpense.add(FilteredTimeModel(
+  //         time: eachTime,
+  //         totalAmount: totalAmt.toString(),
+  //         allFExpense: mData));
+  //   }
+  //   print(dateExpense.length);
+  // }
+  void filteredCatExpense({required List<ExpenseModel> allNExpense}) {
+    dateExpense.clear();
+    List<int>uniqueDates = [];
+    for (ExpenseModel eachExpense in allNExpense) {
+      var catId = eachExpense.cid;
+     // print(catId);
+      if (!uniqueDates.contains(catId)) {
+        uniqueDates.add(catId);
+       // print(uniqueDates);
+      }
+    }
+    for (int eachTime in uniqueDates) {
+      num totalAmt = 0.0;
+      List<ExpenseModel> mData = [];
+      for (ExpenseModel eachCatExpense in allNExpense) {
+        var catId = eachCatExpense.cid;
+        if (catId == eachTime) {
+          mData.add(eachCatExpense);
+          if (eachCatExpense.type == 'Debit') {
+            totalAmt -= int.parse(eachCatExpense.amount);
+          } else {
+            totalAmt += int.parse(eachCatExpense.amount);
+          }
+        }
+      }
+      dateExpense.add(FilteredTimeModel(
+          totalAmount: totalAmt.toString(),
+          allFExpense: mData));
+    }
+    //print(dateExpense.length);
   }
 }
+
+

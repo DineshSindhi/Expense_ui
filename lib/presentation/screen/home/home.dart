@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget>PageList=[
     ExpensePage1(),
     ExpensePage2(),
-    Text('Hi'), // ExpensePage3(),
+    ExpensePage3(),
    ExpensePage4(),
 
   ];

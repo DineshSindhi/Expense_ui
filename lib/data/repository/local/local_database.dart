@@ -64,6 +64,18 @@ class MyDataHelper{
     return check;
   }
 
+  Future<List<UserModel>> fecUser()async{
+    var db=await getDb();
+   // var uid=await getUd();
+    var data =await db.query('$TABLE_NAME_USER');
+    List<UserModel>mData=[];
+    for(Map<String,dynamic>eachUser in data){
+      var each=UserModel.fromMap(eachUser);
+      mData.add(each);
+    }
+    return mData;
+  }
+
   Future<bool> checkEmailExist({required String email})async{
     var db=await getDb();
     var data =await db.query('$TABLE_NAME_USER',where: '$TABLE_COLUMN_UEMAIL= ? ',whereArgs: [email]);
@@ -83,9 +95,9 @@ class MyDataHelper{
     var pref=await SharedPreferences.getInstance();
    return  pref.getInt(IntroPage.KEY)!;
   }
-  Future<void> setUid( int Uid)async{
+  Future<void> setUid( int uId)async{
     var pref=await SharedPreferences.getInstance();
-    pref.setInt(IntroPage.KEY, Uid);
+    pref.setInt(IntroPage.KEY, uId);
   }
 
 
@@ -100,9 +112,7 @@ class MyDataHelper{
 
   Future<List<ExpenseModel>> fecExpense()async{
     var db=await getDb();
-
     var uid=await getUd();
-
     var data =await db.query('$TABLE_NAME_EXPENSE', where: '$TABLE_COLUMN_UID = ?',whereArgs: ['$uid']);
     List<ExpenseModel>mData=[];
     for(Map<String,dynamic>eachUser in data){
